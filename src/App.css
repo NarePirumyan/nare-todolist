@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #3c4b68;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +35,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.maroon:hover {
+  color: maroon;
+  cursor: pointer;
+}
+
+[type="checkbox"]:hover {
+  cursor: pointer;
+}
+
+.task-div {
+  margin-top: 15px;
+  border: 1px solid rgb(20, 20, 20);
 }

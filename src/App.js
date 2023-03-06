@@ -1,13 +1,20 @@
 import logo from './logo.svg';
+import Heading from './Heading';
+import DivMaker from './DivMaker';
 import './App.css';
 
+
 function App() {
+  const comment = 'My first React code.'
+
   return (
     <div className="App">
       <header className="App-header">
+        <Heading />
+        <DivMaker />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          {comment}
         </p>
         <a
           className="App-link"
