@@ -3,6 +3,10 @@ import { Component } from "react";
 export class Description extends Component {
 
     render() {
-        return ;
+        const { text } = this.props;
+        
+        return <p>
+            {text}
+        </p>;
     }
 }
