@@ -1,0 +1,17 @@
+.deleteBtn {
+    margin-left: 8px;
+}
+
+.actionBtns {
+    display: flex;
+    justify-content: right;
+}
+
+.formCheckbox {
+    display: inline;
+}
+
+.formCheckbox>input {
+    cursor: pointer;
+    margin-bottom: 20px;
+}
