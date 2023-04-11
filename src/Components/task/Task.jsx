@@ -1,3 +1,4 @@
+import {memo} from "react";
 import { Col, Card, Button, FormCheck } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -5,14 +6,19 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import styles from "./task.module.css";
 
 
-export function Task(props) {
+function Task(props) {
     const task = props.data;
 
     return (
         <Col xs={12} sm={6} md={4} xl={2}>
-            <Card style={{ width: '200px' }}>
+            <Card className={styles.card}>
                 <Card.Body>
-                    <FormCheck className={styles.formCheckbox}>
+                    <FormCheck 
+                        className={styles.formCheckbox} 
+                        onClick={() => {
+                            props.onEachTaskSelect(task.id);
+                        }}
+                    >
                     </FormCheck>
                     <Card.Title>
                         {task.title}
@@ -39,3 +45,5 @@ export function Task(props) {
         </Col>
     );
 }
+
+export default memo(Task);
