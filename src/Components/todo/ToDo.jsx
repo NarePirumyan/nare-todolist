@@ -1,150 +1,142 @@
-import { Component } from "react";
-import { Container, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
 import Task from "../task/Task";
-import { idGenerator } from "../../utils/helpers";
 import ConfirmDialog from "../ConfirmDialog";
 import styles from "./todo.module.css";
+import DeleteSelected from "../deleteSelected/DeleteSelected";
+import TaskModal from "../taskModal/TaskModal";
+import TaskApi from "../../api/taskApi";
 
+const taskApi = new TaskApi();
 
-export class ToDo extends Component {
-    state = {
-        tasks: [],
-        inputVal: "",
-        selectedTasks: new Set()
-    };
+export function ToDo() {
+    const [tasks, setTasks] = useState([]);
+    const [selectedTasks, setSelectedTasks] = useState(new Set());
+    const [taskToDelete, setTaskToDelete] = useState(null);
+    const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
-    handleInputChange = (event) => {
-        this.setState({
-            inputVal: event.target.value
-        });
+    useEffect(() => {
+        taskApi.getAll()
+            .then((tasks) => {
+                setTasks(tasks);
+            });
+    }, []);
 
+    const onCreateNewTask = (newTask) => {
+        taskApi.add(newTask)
+            .then((task) => {
+                const tasksCopy = [...tasks];
+                tasksCopy.push(task);
+
+                setTasks(tasksCopy);
+                setIsAddTaskModalOpen(false);
+                toast.success('The task has been added successfully!');
+            })
+            .catch((err) => {
+                console.log("err", err);
+                toast.error(err.message);
+            });
     }
 
-    createNewTask = () => {
-        const trimedTitle = this.state.inputVal.trim();
-        if (!trimedTitle) {
-            return;
-        }
+    const onEachTaskDelete = (taskId) => {
+        const filteredTasks = tasks.filter((task) => task._id !== taskId);
+        setTasks(filteredTasks);
 
-        const newTask = {
-            id: idGenerator(),
-            title: trimedTitle
-        }
-
-        const tasksCopy = [...this.state.tasks];
-        tasksCopy.push(newTask);
-
-        this.setState({
-            tasks: tasksCopy,
-            inputVal: ""
-        });
-    }
-
-    handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            this.createNewTask();
-        }
-    }
-
-    onEachTaskDelete = (taskId) => {
-        const {tasks, selectedTasks} = this.state;
-        const filteredTasks = tasks.filter((task) => task.id !== taskId);
-        const newState = {
-            tasks: filteredTasks
-        };
-
-        if(selectedTasks.has(taskId)) {
+        if (selectedTasks.has(taskId)) {
             const newSelectedTasks = new Set(selectedTasks);
 
             newSelectedTasks.delete(taskId);
-            newState.selectedTasks = newSelectedTasks;
+            setSelectedTasks(newSelectedTasks);
         }
-
-        this.setState(newState);
     }
 
-    onEachTaskSelect = (taskId) => {
-        const newSelectedTasks = new Set(this.state.selectedTasks);
+    const onEachTaskSelect = (taskId) => {
+        const selectedTasksCopy = new Set(selectedTasks);
 
-        if(newSelectedTasks.has(taskId)) {
-            newSelectedTasks.delete(taskId);
+        if (selectedTasksCopy.has(taskId)) {
+            selectedTasksCopy.delete(taskId);
         }
         else {
-            newSelectedTasks.add(taskId);
+            selectedTasksCopy.add(taskId);
         }
 
-        this.setState ({
-            selectedTasks: newSelectedTasks
-        });
+        setSelectedTasks(selectedTasksCopy);
     }
 
-    deleteSelectedTasks = () => {
+    const deleteSelectedTasks = () => {
         const newTasks = [];
-        const {tasks, selectedTasks} = this.state;
 
         tasks.forEach((task) => {
-            if(!selectedTasks.has(task.id)) {
+            if (!selectedTasks.has(task._id)) {
                 newTasks.push(task);
             }
         })
-        
-        this.setState({
-            tasks: newTasks,
-            selectedTasks: new Set()
-        })
+        setTasks(newTasks);
+        setSelectedTasks(new Set());
     }
 
-    render() {
-        const isAddBtnDisabled = !this.state.inputVal.trim();
-
-        return (
-            <Container>
-                <Row className="justify-content-center">
-                    <Col xs={10} md={6}>
-                        <InputGroup className="mt-4 mb-3">
-                            <Form.Control
-                                placeholder="Task name"
-                                value={this.state.inputVal}
-                                onChange={this.handleInputChange}
-                                onKeyDown={this.handleKeyDown}
+    return (
+        <Container>
+            <Row className="justify-content-center">
+                <Col xs={10} md={6}>
+                    <Button
+                        variant="success"
+                        onClick={() => setIsAddTaskModalOpen(true)}
+                    >Add new task
+                    </Button>
+                </Col>
+            </Row>
+            <Row>
+                {
+                    tasks.map((task) => {
+                        return (
+                            <Task
+                                key={task._id}
+                                data={task}
+                                onEachTaskDelete={setTaskToDelete}
+                                onEachTaskSelect={onEachTaskSelect}
                             />
-                            <Button
-                                variant="success"
-                                onClick={this.createNewTask}
-                                disabled={isAddBtnDisabled}
-                            >Add
-                            </Button>
-                        </InputGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    {
-                        this.state.tasks.map((task) => {
-                            return (
-                                <Task
-                                    key={task.id}
-                                    data={task}
-                                    onEachTaskDelete={this.onEachTaskDelete} 
-                                    onEachTaskSelect={this.onEachTaskSelect}
-                                />
-                            );
-                        })
-                    }
-                </Row>
-                <Row>
-                    <Col>
-                        <Button
-                            variant="danger"
-                            className={styles.deleteSelectedBtn} 
-                            onClick={this.deleteSelectedTasks}
-                            disabled={!this.state.selectedTasks.size}
-                        >Delete delected
-                        </Button>
-                    </Col>
-
-                </Row>
-                <ConfirmDialog />
-            </Container>
-        );
-    }
+                        );
+                    })
+                }
+            </Row>
+            <DeleteSelected
+                className={styles.deleteSelectedBtn}
+                disabled={!selectedTasks.size}
+                tasksSize={selectedTasks.size}
+                onSubmit={deleteSelectedTasks}
+            />
+            {taskToDelete &&
+                <ConfirmDialog
+                    tasksSize={1}
+                    onCancel={() => {
+                        setTaskToDelete(null);
+                    }}
+                    onSubmit={() => {
+                        onEachTaskDelete(taskToDelete);
+                        setTaskToDelete(null);
+                    }}
+                />}
+            {isAddTaskModalOpen &&
+                <TaskModal
+                    onCancel={() => {
+                        setIsAddTaskModalOpen(false);
+                    }}
+                    onSave={onCreateNewTask}
+                />}
+            <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
+        </Container>
+    );
 }
