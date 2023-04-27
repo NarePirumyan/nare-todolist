@@ -1,22 +1,30 @@
 .card {
-    width: 200px; 
     margin-bottom: 20px;
 }
 
-.deleteBtn {
-    margin-left: 8px;
+.editBtn {
+    margin: 0 5px;
 }
 
-.actionBtns {
-    display: flex;
-    justify-content: right;
+.selectTask {
+    width: 18px;
+    height: 18px;
+    margin-bottom: 30px;
 }
 
-.formCheckbox {
-    display: inline;
-}
-
-.formCheckbox>input {
+.selectTask input {
     cursor: pointer;
     margin-bottom: 20px;
+}
+
+.truncateText {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    min-height: 24px;
+}
+
+.taskBg {
+    background: linear-gradient(141deg, #7d707e 0%, #8fdf93 51%, #6aaac2 75%);
+    border: 2px solid green;
 }

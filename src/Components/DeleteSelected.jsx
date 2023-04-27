@@ -1,11 +1,9 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types"
-import ConfirmDialog from "../ConfirmDialog";
-import styles from "./deleteSelected.module.css";
+import ConfirmDialog from "./ConfirmDialog";
 
-
-export default function DeleteSelected(props) {
+function DeleteSelected(props) {
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
     const toggleConfirmDialog = () => {
@@ -16,10 +14,9 @@ export default function DeleteSelected(props) {
         <>
             <Button
                 variant="danger"
-                className={styles.deleteSelectedBtn}
-                onClick={toggleConfirmDialog} //deleteSelectedTasks
+                onClick={toggleConfirmDialog}
                 disabled={props.disabled}
-            >Delete selected
+            > Delete selected
             </Button>
             {isConfirmDialogOpen && (
                 <ConfirmDialog
@@ -36,5 +33,8 @@ export default function DeleteSelected(props) {
 }
 
 DeleteSelected.propTypes = {
+    tasksSize: PropTypes.number.isRequired,
     onSubmit: PropTypes.func.isRequired,
 };
+
+export default memo(DeleteSelected);

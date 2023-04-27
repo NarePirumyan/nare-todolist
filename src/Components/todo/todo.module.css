@@ -1,5 +1,4 @@
-.deleteSelectedBtn {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
+.mainBtns {
+    margin: 20px 0;
+    gap: 5px;
 }
