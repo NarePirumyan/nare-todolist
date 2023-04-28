@@ -3,7 +3,7 @@ import { Accordion, Form, Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { formatDate } from "../../utils/helpers";
 import styles from "./filters.module.css";
 
@@ -31,10 +31,10 @@ const dateOptions = [
 ];
 
 const initialDateFilters = {
-    create_lte: '',
-    create_gte: '',
-    complete_lte: '',
-    complete_gte: '',
+    create_lte: "",
+    create_gte: "",
+    complete_lte: "",
+    complete_gte: "",
 };
 
 const initialOptionFilters = {
@@ -43,17 +43,16 @@ const initialOptionFilters = {
 };
 
 function Filters(props) {
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [optionFilters, setOptionFilters] = useState(initialOptionFilters);
-
     const [dateFilters, setDateFilters] = useState(initialDateFilters);
 
     const resetFilters = () => {
-        setSearch('');
+        setSearch("");
         setDateFilters(initialDateFilters);
         setOptionFilters(initialOptionFilters);
         props.onFilter({
-            search: '',
+            search: "",
             ...initialDateFilters,
             ...initialOptionFilters,
         });
@@ -66,9 +65,7 @@ function Filters(props) {
         })
     };
 
-    const onSearchChange = (event) => {
-        setSearch(event.target.value);
-    };
+    const onSearchChange = (e) => setSearch(e.target.value);
 
     const onDateChange = (name, date) => {
         setDateFilters({
@@ -88,7 +85,7 @@ function Filters(props) {
 
     return (
         <Accordion className="mb-4">
-            <Accordion.Item eventKey="0">
+            <Accordion.Item eventKey="0" className={styles.accordionBgColor}>
                 <Accordion.Header>
                     <Form
                         className={`${styles.form} d-flex`}
@@ -123,6 +120,7 @@ function Filters(props) {
                         <Row>
                             {dateOptions.map((dateOption) => {
                                 const dateValue = dateFilters[dateOption.value];
+
                                 return (
                                     <Col sm={6} lg={3}
                                         className="text-center"
@@ -132,7 +130,7 @@ function Filters(props) {
                                             <legend>{dateOption.label}</legend>
                                             <DatePicker
                                                 showIcon
-                                                selected={dateValue ? new Date(dateValue) : ''}
+                                                selected={dateValue ? new Date(dateValue) : ""}
                                                 onChange={(date) => onDateChange(dateOption.value, date)}
                                             />
                                         </fieldset>
@@ -145,7 +143,7 @@ function Filters(props) {
                                 <fieldset>
                                     <legend>Status</legend>
                                     <Form.Select
-                                        onChange={(event) => onFilterOptionChange('status', event.target.value)}
+                                        onChange={(e) => onFilterOptionChange("status", e.target.value)}
                                         value={optionFilters.status}
                                     >
                                         {statusOptions.map((statusOption) => (
@@ -164,7 +162,7 @@ function Filters(props) {
                                 <fieldset>
                                     <legend>Sort</legend>
                                     <Form.Select
-                                        onChange={(event) => onFilterOptionChange('sort', event.target.value)}
+                                        onChange={(e) => onFilterOptionChange("sort", e.target.value)}
                                         value={optionFilters.sort}
                                     >
                                         {sortOptions.map((sortOption) => (

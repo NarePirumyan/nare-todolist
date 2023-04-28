@@ -2,3 +2,7 @@
     margin: 20px 0;
     gap: 5px;
 }
+
+.mainBtns button {
+    min-width: 135px;
+}

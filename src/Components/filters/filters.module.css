@@ -9,3 +9,11 @@
 .filterItem>legend {
     font-size: 20px;
 }
+
+.accordionBgColor {
+    background: linear-gradient(145deg, #aec2bb 0%, #92dd97 51%, #d4c962 80%);
+}
+
+.datePicker {
+    color: red;
+}
