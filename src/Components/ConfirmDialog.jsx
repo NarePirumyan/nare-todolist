@@ -18,7 +18,6 @@ function ConfirmDialog(props) {
                     <Button
                         variant='danger'
                         onClick={props.onSubmit}
-
                     >Delete</Button>
                     <Button
                         variant='success'

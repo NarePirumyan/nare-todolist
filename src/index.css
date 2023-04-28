@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: url("https://image.slidesdocs.com/responsive-images/slides/23-black-plan-debriefing-report-work-blackboard-aesthetic-fashion-multi-purpose-powerpoint-background_85d3f4a71f__960_540.jpg");
+  background-size: cover;
 }
 
 code {
