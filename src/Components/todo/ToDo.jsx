@@ -22,7 +22,7 @@ export default function ToDo() {
     const getTasks = (filters) => {
         taskApi.getAll(filters)
             .then((tasks) => {
-                setTasks(tasks);
+                setTasks(tasks);            
             })
             .catch((err) => {
                 toast.error(err.message);
@@ -127,7 +127,7 @@ export default function ToDo() {
     };
 
     const onFilter = (filters) => {
-        getTasks(filters);
+        getTasks(filters);      
     };
 
     return (
@@ -135,7 +135,7 @@ export default function ToDo() {
             <Row>
                 <NavBar />
             </Row>
-            <Row className={`${styles.mainBtns} justify-content-center`}>
+            <Row className={`${styles.mainBtns} d-flex justify-content-around`}>
                 <Col xs={12} sm={4} md={2}>
                     <Button
                         variant="success"
@@ -192,9 +192,7 @@ export default function ToDo() {
                 />}
             {isAddTaskModalOpen &&
                 <TaskModal
-                    onCancel={() => {
-                        setIsAddTaskModalOpen(false);
-                    }}
+                    onCancel={() => setIsAddTaskModalOpen(false)}
                     onSave={onCreateNewTask}
                 />}
             {editableTask && (

@@ -25,6 +25,6 @@
 }
 
 .taskBg {
-    background: linear-gradient(141deg, #7d707e 0%, #8fdf93 51%, #6aaac2 75%);
-    border: 2px solid green;
+    background: linear-gradient(145deg, #aec2bb 0%, #92dd97 51%, #d4c962 80%);
+    border: 2px solid rgb(15, 151, 113);
 }

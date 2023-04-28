@@ -10,6 +10,7 @@ function TaskModal(props) {
     const [description, setDescription] = useState("");
     const [date, setDate] = useState(new Date());
     const [isTitleValid, setIsTitleValid] = useState(false);
+    const [hasSmthChanged, setHasSmthChanged] = useState(false);
 
     useEffect(() => {
         const { data } = props;
@@ -19,7 +20,6 @@ function TaskModal(props) {
             setDate(data.date ? new Date(data.date) : new Date());
             setIsTitleValid(true);
         }
-        setIsTitleValid(true);
     }, [props]);
 
     const saveTask = () => {
@@ -39,22 +39,23 @@ function TaskModal(props) {
         const trimmedTitle = value.trim();
 
         setIsTitleValid(!!trimmedTitle);
-        setTitle(value);
+        setTitle(value.toUpperCase());
     };
 
     useLayoutEffect(() => {
-        const keydownHandler = ((e) => {
-            const { key, ctrlKey, metaKey } = e;
-            if (key === 's' && (ctrlKey || metaKey)) {
-                e.preventDefault();
-                saveTask();
+        const keyDownHandler = (e) => {
+          const {key, ctrlKey, metaKey} = e;
+            if(key === 's' && (ctrlKey || metaKey)){
+              e.preventDefault();
+              saveTask();
             }
-        });
-        document.addEventListener("keydown", keydownHandler);
-
-        return () => document.removeEventListener("keydown", keydownHandler);
+          };
+        document.addEventListener("keydown", keyDownHandler);
+        return () => {
+          document.removeEventListener("keydown", keyDownHandler);
+        };
         // eslint-disable-next-line
-    }, [title, description, date]);
+      }, [title, description, date]);
 
     return (
         <Modal
@@ -70,7 +71,10 @@ function TaskModal(props) {
                     className={`${!isTitleValid ? styles.invalid : ''} mb-3`}
                     placeholder="Task title"
                     value={title}
-                    onChange={onTitleChange}
+                    onChange={(e) => {
+                        onTitleChange(e);
+                        setHasSmthChanged(true);
+                    }}
                 />
                 <Form.Control
                     className="mb-3"
@@ -78,13 +82,20 @@ function TaskModal(props) {
                     rows={5}
                     placeholder="Description"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => {
+                        setDescription(e.target.value);
+                        setHasSmthChanged(true);
+                    }}
                 />
                 <h6>Deadline:</h6>
                 <DatePicker
                     showIcon
                     selected={date}
-                    onChange={setDate}>
+                    minDate={new Date()}
+                    onChange={(date) => {
+                        setDate(date);
+                        setHasSmthChanged(true);
+                    }} >
                 </DatePicker>
             </Modal.Body>
             <Modal.Footer >
@@ -92,7 +103,7 @@ function TaskModal(props) {
                     <Button
                         variant="success"
                         onClick={saveTask}
-                        disabled={!isTitleValid}
+                        disabled={!isTitleValid || (props.data && !hasSmthChanged)}
                     >Save
                     </Button>
                     <Button
